@@ -25,24 +25,27 @@ export const GrammarGraph: React.FC<GrammarGraphProps> = ({ grammar }) => {
     );
   }
 
-  const nodes: Node[] = grammar.Vn.map((state) => ({
+  const horizontalSpacing = 120; // расстояние между вершинами
+  const yPosition = 250; // все вершины будут на одной горизонтали
+  
+  const nodes: Node[] = grammar.Vn.map((state, index) => ({
     id: state,
     data: { label: state },
-    position: { x: Math.random() * 600, y: Math.random() * 600 },
+    position: { x: index * horizontalSpacing, y: yPosition },
     style: {
       borderRadius: "9999px",
       border: "2px solid #333",
-      padding: 10,
-      textAlign: "center",
       backgroundColor: state === grammar.S ? "#c0fdfb" : "white",
       width: 60,
       height: 60,
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
+      fontWeight: 600,
     },
     type: "default",
   }));
+  
 
   const edges: Edge[] = grammar.P.map((rule, index) => {
     const [from, toFull] = rule.split("->").map((s) => s.trim());
