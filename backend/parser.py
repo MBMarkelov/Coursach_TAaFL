@@ -25,7 +25,7 @@ def to_postfix(regex: str) -> List[str]:
             while stack and stack[-1] != '(':
                 output.append(stack.pop())
             stack.pop()
-        else:  # operator
+        else:  
             while stack and stack[-1] != '(' and precedence.get(stack[-1], 0) >= precedence[char]:
                 output.append(stack.pop())
             stack.append(char)

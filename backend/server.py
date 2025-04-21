@@ -11,11 +11,22 @@ def build_nfa():
     data = request.get_json()
     regex = data.get("regex", "")
 
-    postfix = to_postfix(regex)
-    builder = ThompsonNFA()
-    steps = builder.build(postfix)
+    if not regex:
+        return jsonify({"error": "Регулярное выражение не указано"}), 400
 
-    return jsonify({"steps": steps})
+    try:
+        postfix = to_postfix(regex)
+        builder = ThompsonNFA()
+        result = builder.build(postfix)
+
+        return jsonify({
+            "steps": result["steps"],
+            "grammar": result["grammar"]
+        })
+
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 
 if __name__ == "__main__":
     app.run(debug=True)

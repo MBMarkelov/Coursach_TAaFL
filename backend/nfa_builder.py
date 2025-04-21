@@ -26,9 +26,7 @@ class ThompsonNFA:
 
     def _new_state(self) -> int:
         return next(self._id_gen)
-
-    def build(self, postfix: List[str]) -> List[Dict]:
-        print("===> build() вызван, postfix =", postfix)
+    def build(self, postfix: List[str]) -> Dict:
         stack = []
 
         for token in postfix:
@@ -85,7 +83,37 @@ class ThompsonNFA:
                 stack.append(NFAFragment(start, end, trans))
                 self._record_step("Применена операция +", trans, start, end)
 
-        return self.steps
+        final_fragment = stack[-1]
+        grammar = self._generate_grammar(final_fragment)
+        return {
+            "steps": self.steps,
+            "grammar": grammar
+        }
+
+    def _generate_grammar(self, frag: NFAFragment) -> Dict:
+        transitions = frag.transitions
+        Vt = set()
+        Vn = set()
+        P = []
+
+        for t in transitions:
+            from_nt = f"q{t.from_state}"
+            to_nt = f"q{t.to_state}"
+            Vn.update([from_nt, to_nt])
+            if t.symbol != 'ε':
+                Vt.add(t.symbol)
+                rule = f"{from_nt} -> {t.symbol}{to_nt}"
+            else:
+                rule = f"{from_nt} -> {to_nt}"
+            P.append(rule)
+
+        S = f"q{frag.start}"
+        return {
+            "Vt": sorted(list(Vt)),
+            "Vn": sorted(list(Vn)),
+            "P": sorted(P),
+            "S": S
+        }
 
     def _record_step(self, desc: str, transitions: List[Transition], start: int, end: int):
         step = {
