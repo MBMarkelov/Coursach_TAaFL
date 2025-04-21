@@ -10,12 +10,12 @@ export interface Grammar {
   P: string[]; // Массив строк, как в ответе от сервера
 }
 
-interface Step {
+export interface Step {
   description: string;
   start_state: number;
   accept_state: number;
-  nodes: number[]; // Или строка, если понадобится
-  edges: any[];    // Можно типизировать точнее
+  nodes: number[]; 
+  edges: any[];
 }
 
 export default function App() {
@@ -103,7 +103,7 @@ export default function App() {
           <div className="border p-6 rounded shadow bg-white overflow-auto max-h-[600px]">
             {grammar && (
               <>
-                <h2 className="text-2xl font-semibold mb-4">Псевдограмматика</h2>
+                <h2 className="text-2xl font-semibold mb-4">Эквивалентная грамматика</h2>
                 <pre className="mb-2">Vn = {JSON.stringify(grammar.Vn)}</pre>
                 <pre className="mb-2">Vt = {JSON.stringify(grammar.Vt)}</pre>
                 <pre className="mb-2">S = {grammar.S}</pre>
@@ -136,7 +136,7 @@ export default function App() {
         )}
         {/* Граф */}
         {elements.nodes.length > 0 && (
-          <GrammarGraph grammar={grammar} />
+          <GrammarGraph grammar={grammar}steps={steps} />
         )}
       </div>
     </div>
